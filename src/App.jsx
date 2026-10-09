@@ -1,14 +1,37 @@
-// import { useState } from 'react'
-// import heroImg from './assets/hero.png'
-// import reactLogo from './assets/react.svg'
-// import viteLogo from './assets/vite.svg'
+import { useState } from 'react'
 import './App.css'
 
 function App() {
-  // const [count, setCount] = useState(0)
-
+  const [instanceId, setInstanceId] = useState('')
+  const [apiToken, setApiToken] = useState('')
+  
+  function handleSubmit(event) {
+    event.preventDefault()
+    console.log('Instance ID:', instanceId)
+    console.log('API Token:', apiToken !== '')
+  }
   return (
-      <h1>Telegram Chat</h1>
+      <form onSubmit={handleSubmit}>
+        <h1>Telegram Chat</h1>
+        <input 
+          name="instanceId" 
+          placeholder="Instance ID" 
+          value={instanceId} 
+          onChange={function (event) {
+            setInstanceId(event.target.value)
+          }}
+        />
+        <input 
+          name="apiToken" 
+          placeholder="API token" 
+          type="password" 
+          value={apiToken} 
+           onChange={function (event) {
+            setApiToken(event.target.value)
+          }} 
+        />
+        <button>Connect</button>
+      </form>
   )
 }
 
