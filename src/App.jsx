@@ -5,11 +5,16 @@ function App() {
   const [instanceId, setInstanceId] = useState('')
   const [apiToken, setApiToken] = useState('')
   
-  function handleSubmit(event) {
+  async function handleSubmit(event) {
     event.preventDefault()
-    console.log('Instance ID:', instanceId)
-    console.log('API Token:', apiToken !== '')
+
+    const url = `https://4100.api.green-api.com/waInstance${instanceId}/getStateInstance/${apiToken}`
+    const response = await fetch(url)
+    const data = await response.json()
+
+    console.log(data.stateInstance)
   }
+
   return (
       <form onSubmit={handleSubmit}>
         <h1>Telegram Chat</h1>
