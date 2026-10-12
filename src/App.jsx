@@ -81,13 +81,21 @@ function App() {
 
     const data = await response.json()
 
-    if (!data) {
+    if (!data || stopped) {
       return
     }
 
     console.log('Received:', data)
 
   }
+
+  useEffect(function () {
+    if (!isConnected) {
+      return
+    }
+
+    let stopped = false
+    let timeoutId
 
   async function deleteNotification(receiptId) { // ? docs 
     const url = `https://4100.api.green-api.com/waInstance${instanceId}/deleteNotification/${apiToken}/${receiptId}`
@@ -99,6 +107,27 @@ function App() {
     if (!repsonse.ok) {
       throw new Error(`Failed to delete notification: ${repsonse.status}`)
     }
+  }
+
+  async function checkMessages() {
+    try {
+      await receiveMessages()
+    } catch (error) {
+      console.error('Failed:', error)
+    }
+
+    if (!stopped) {
+      timeoutId = setTimeout(checkMessages, 5000)
+    }
+  }
+
+    timeoutId = setTimeout(checkMessages, 0)
+
+    return function () {
+      stopped = true
+      clearTimeout(timeoutId)
+    }
+  }, [isConnected, instanceId, apiToken]) // ?
 
   const messageElements = chatMessages
     .filter(function (message) {
