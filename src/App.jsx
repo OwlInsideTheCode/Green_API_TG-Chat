@@ -60,7 +60,8 @@ function App() {
     const newMessage = {
       id: data.idMessage,
       text: messages,
-      phone: activePhone
+      phone: activePhone,
+      direction: 'outgoing'
     }
 
     setChatMessages(function (prevMessages) {
@@ -134,9 +135,19 @@ function App() {
       return message.phone === activePhone
     })
     .map(function (message) {
-      return <p key={message.id}>{message.text}</p>
-    })
+      let sender = 'You'
 
+      if (message.direction === 'incoming') {
+        sender = 'Contact'
+    }
+
+      return (
+        <p key={message.id}> className={message.direction}>
+        <strong>{sender}: </strong>
+        <span>{message.text}</span>
+        </p>
+    )
+    })
   let chatContent = null
 
   if (activePhone !== '') {
