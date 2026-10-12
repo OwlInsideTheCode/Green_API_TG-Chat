@@ -40,7 +40,7 @@ if (props.activePhone !== '') {
 }
 
   return (
-    <div>
+    <div className="chat">
       <h1>Your chats</h1>
 
       <input
@@ -54,8 +54,8 @@ if (props.activePhone !== '') {
 
       <button type="button" onClick={props.openChat}>
         Open Chat
-        <div>{chatContent}</div>
       </button>
+        <div>{chatContent}</div>
     </div>
   )
 }
