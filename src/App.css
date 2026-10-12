@@ -34,7 +34,7 @@
 .login-form button {
   width: 100%;
   padding: 12px;
-  background-color: #00a884;
+  background-color: #3390ec;
   color: white;
   border: none;
   border-radius: 4px;
@@ -42,7 +42,7 @@
 }
 
 .login-form button:hover {
-  background-color: #008f70;
+  background-color: #287dcc;
 }
 
 .chat {
@@ -53,16 +53,20 @@
   min-height: 600px;
 }
 
+.chat h1 {
+  margin-top: 0;
+  font-size: 28px;
+}
+
 .chat input {
   padding: 10px;
   border: 1px solid #ccc;
   border-radius: 4px;
-  margin-right: 10px;
 }
 
 .chat button {
   padding: 10px 16px;
-  background-color: #00a884;
+  background-color: #3390ec;
   color: white;
   border: none;
   border-radius: 4px;
@@ -70,7 +74,22 @@
 }
 
 .chat button:hover {
-  background-color: #008f70;
+  background-color: #287dcc;
+}
+
+.chat-controls {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.chat-controls input {
+  flex: 1;
+  min-width: 0;
+}
+
+.chat-controls button {
+  flex-shrink: 0;
 }
 
 .message-list {
@@ -115,54 +134,4 @@
 .message-compose input {
   flex: 1;
   min-width: 0;
-  margin-right: 0;
-}
-
-.chat-controls {
-  display: flex;
-  gap: 10px;
-  margin-bottom: 20px;
-}
-
-.chat-controls input {
-  flex: 1;
-  min-width: 0;
-  margin-right: 0;
-}
-
-.chat-controls button {
-  flex-shrink: 0;
-}
-
-.chat h1 {
-  margin-top: 0;
-  font-size: 28px;
-}
-
-@media (max-width: 600px) {
-  .app {
-    padding: 12px;
-  }
-
-  .chat {
-    padding: 16px;
-    min-height: auto;
-  }
-
-  .chat-controls {
-    flex-direction: column;
-  }
-
-  .message-list {
-    padding: 12px;
-  }
-
-  .message-list p {
-    max-width: 90%;
-  }
-
-  .login-form {
-    margin: 40px auto;
-    padding: 20px;
-  }
 }
