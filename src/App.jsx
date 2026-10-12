@@ -1,10 +1,16 @@
 import { useState } from 'react'
 import './App.css'
+import LoginForm from './LoginForm.jsx'
 
 function App() {
   const [instanceId, setInstanceId] = useState('')
   const [apiToken, setApiToken] = useState('')
-  
+  const [isConnected, setIsConnected] = useState(false)
+  const [phone, setPhone] = useState('')
+  const [activePhone, setActivePhone] = useState('')
+  const [messages, setMessages] = useState('')
+  const [chatMessages, setChatMessages] = useState([])
+
   async function handleSubmit(event) {
     event.preventDefault()
 
@@ -12,31 +18,121 @@ function App() {
     const response = await fetch(url)
     const data = await response.json()
 
-    console.log(data.stateInstance)
+    if (data.stateInstance === 'authorized') {
+      setIsConnected(true)
+    }
+  }
+
+  function openChat() {
+    if (phone.trim() === '') {
+      return
+    }
+
+    setActivePhone(phone.trim())
+  }
+
+  async function sendMessage() {
+    if (messages.trim() === '') {
+      return
+    }
+
+    const url = `https://4100.api.green-api.com/waInstance${instanceId}/sendMessage/${apiToken}`
+
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        chatId: `${activePhone}@c.us`,
+        message: messages
+      })
+    })
+
+    if (!response.ok) {
+      console.log('Failed to send:', response.status)
+      return
+    }
+
+    const data = await response.json()
+    console.log('Message accepted:', data.idMessage)
+
+    const newMessage = {
+      id: data.idMessage,
+      text: messages,
+      phone: activePhone
+    }
+
+    setChatMessages(function (prevMessages) {
+      return [...prevMessages, newMessage]
+    })
+
+    setMessages('')
+  }
+
+  const messageElements = chatMessages
+    .filter(function (message) {
+      return message.phone === activePhone
+    })
+    .map(function (message) {
+      return <p key={message.id}>{message.text}</p>
+    })
+
+  let chatContent = null
+
+  if (activePhone !== '') {
+    chatContent = (
+      <div>
+        <p>Chat with: {activePhone}</p>
+
+        <div>{messageElements}</div>
+
+        <input
+          placeholder="Type your message"
+          value={messages}
+          onChange={function (event) {
+            setMessages(event.target.value)
+          }}
+        />
+
+        <button type="button" onClick={sendMessage}>
+          Send
+        </button>
+      </div>
+    )
+  }
+
+  if (isConnected) {
+    return (
+      <div>
+        <h1>Your chats</h1>
+
+        <input
+          type="tel"
+          placeholder="Phone number with country code"
+          value={phone}
+          onChange={function (event) {
+            setPhone(event.target.value)
+          }}
+        />
+
+        <button type="button" onClick={openChat}>
+          Open Chat
+        </button>
+
+        <div>{chatContent}</div>
+      </div>
+    )
   }
 
   return (
-      <form onSubmit={handleSubmit}>
-        <h1>Telegram Chat</h1>
-        <input 
-          name="instanceId" 
-          placeholder="Instance ID" 
-          value={instanceId} 
-          onChange={function (event) {
-            setInstanceId(event.target.value)
-          }}
-        />
-        <input 
-          name="apiToken" 
-          placeholder="API token" 
-          type="password" 
-          value={apiToken} 
-           onChange={function (event) {
-            setApiToken(event.target.value)
-          }} 
-        />
-        <button>Connect</button>
-      </form>
+    <LoginForm
+      handleSubmit={handleSubmit}
+      instanceId={instanceId}
+      setInstanceId={setInstanceId}
+      apiToken={apiToken}
+      setApiToken={setApiToken}
+    />
   )
 }
 
