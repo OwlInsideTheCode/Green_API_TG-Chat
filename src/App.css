@@ -72,3 +72,37 @@
 .chat button:hover {
   background-color: #008f70;
 }
+
+.message-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  height: 400px;
+  overflow-y: auto;
+  margin: 20px 0;
+  padding: 20px;
+  background-color: #dce5db;
+  border-radius: 8px;
+}
+
+.message-list p {
+  max-width: 75%;
+  margin: 0;
+  padding: 10px 14px;
+  border-radius: 12px;
+  text-align: left;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.message-list .incoming {
+  align-self: flex-start;
+  background-color: white;
+  border-bottom-left-radius: 4px;
+}
+
+.message-list .outgoing {
+  align-self: flex-end;
+  background-color: #eeffde;
+  border-bottom-right-radius: 4px;
+}
