@@ -11,7 +11,22 @@ function App() {
   const [phone, setPhone] = useState('')
   const [activePhone, setActivePhone] = useState('')
   const [messages, setMessages] = useState('')
-  const [chatMessages, setChatMessages] = useState([])
+  // const [chatMessages, setChatMessages] = useState([])
+  const [chatMessages, setChatMessages] = useState([
+  {
+    id: 1,
+    text: "Hey! What's up?",
+    phone: '1234567890',
+    direction: 'incoming'
+  },
+  {
+    id: 2,
+    text: "Just chilling. You?",
+    phone: '1234567890',
+    direction: 'outgoing'
+  }
+])
+  const devMode = true
 
   async function handleSubmit(event) {
     event.preventDefault()
@@ -96,7 +111,36 @@ function App() {
         return
       }
 
-      console.log('Received:', data)
+      const notification = data.body
+
+if (
+  notification.typeWebhook === 'incomingMessageReceived' &&
+  notification.messageData.typeMessage === 'textMessage' &&
+  notification.senderData.chatType === 'user' &&
+  notification.senderData.senderPhoneNumber
+) {
+  const newMessage = {
+    id: notification.idMessage,
+    text: notification.messageData.textMessageData.textMessage,
+    phone: String(notification.senderData.senderPhoneNumber),
+    direction: 'incoming'
+  }
+
+  setChatMessages(function (prevMessages) {
+    const alreadyExists = prevMessages.some(function (message) {
+      return message.id === newMessage.id &&
+        message.phone === newMessage.phone
+    })
+
+    if (alreadyExists) {
+      return prevMessages
+    }
+
+    return [...prevMessages, newMessage]
+  })
+}
+
+await deleteNotification(data.receiptId)
     }
 
     async function deleteNotification(receiptId) { // ? docs 
@@ -133,7 +177,7 @@ function App() {
 
   return (
     <div className="app">
-      {!isConnected ? (
+      {!isConnected && !devMode ? (
         <LoginForm
           instanceId={instanceId}
           apiToken={apiToken}
