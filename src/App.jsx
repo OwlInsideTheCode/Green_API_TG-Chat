@@ -1,6 +1,8 @@
+
 import { useState, useEffect } from 'react'
 import './App.css'
 import LoginForm from './LoginForm.jsx'
+import Chat from './Chat.jsx'
 
 function App() {
   const [instanceId, setInstanceId] = useState('')
@@ -71,25 +73,6 @@ function App() {
     setMessages('')
   }
 
-  async function receiveMessages() {
-    const url = `https://4100.api.green-api.com/waInstance${instanceId}/receiveNotification/${apiToken}`
-    const response = await fetch(url)
-
-    if (!response.ok) {
-      console.log('Failed to receive:', response.status)
-      return
-    }
-
-    const data = await response.json()
-
-    if (!data || stopped) {
-      return
-    }
-
-    console.log('Received:', data)
-
-  }
-
   useEffect(function () {
     if (!isConnected) {
       return
@@ -98,29 +81,47 @@ function App() {
     let stopped = false
     let timeoutId
 
-  async function deleteNotification(receiptId) { // ? docs 
-    const url = `https://4100.api.green-api.com/waInstance${instanceId}/deleteNotification/${apiToken}/${receiptId}`
-    
-    const repsonse = await fetch(url, {
-      method: 'DELETE'
-    })
+    async function receiveMessages() {
+      const url = `https://4100.api.green-api.com/waInstance${instanceId}/receiveNotification/${apiToken}`
+      const response = await fetch(url)
 
-    if (!repsonse.ok) {
-      throw new Error(`Failed to delete notification: ${repsonse.status}`)
-    }
-  }
+      if (!response.ok) {
+        console.log('Failed to receive:', response.status)
+        return
+      }
 
-  async function checkMessages() {
-    try {
-      await receiveMessages()
-    } catch (error) {
-      console.error('Failed:', error)
+      const data = await response.json()
+
+      if (!data || stopped) {
+        return
+      }
+
+      console.log('Received:', data)
     }
 
-    if (!stopped) {
-      timeoutId = setTimeout(checkMessages, 5000)
+    async function deleteNotification(receiptId) { // ? docs 
+      const url = `https://4100.api.green-api.com/waInstance${instanceId}/deleteNotification/${apiToken}/${receiptId}`
+
+      const response = await fetch(url, {
+        method: 'DELETE'
+      })
+
+      if (!response.ok) {
+        throw new Error(`Failed to delete notification: ${response.status}`)
+      }
     }
-  }
+
+    async function checkMessages() {
+      try {
+        await receiveMessages()
+      } catch (error) {
+        console.error('Failed:', error)
+      }
+
+      if (!stopped) {
+        timeoutId = setTimeout(checkMessages, 5000)
+      }
+    }
 
     timeoutId = setTimeout(checkMessages, 0)
 
@@ -130,6 +131,31 @@ function App() {
     }
   }, [isConnected, instanceId, apiToken]) // ?
 
+  return (
+    <div className="app">
+      {!isConnected ? (
+        <LoginForm
+          instanceId={instanceId}
+          apiToken={apiToken}
+          setInstanceId={setInstanceId}
+          setApiToken={setApiToken}
+          handleSubmit={handleSubmit}
+        />
+      ) : (
+        <Chat
+          phone={phone}
+          setPhone={setPhone}
+          activePhone={activePhone}
+          openChat={openChat}
+          messages={messages}
+          setMessages={setMessages}
+          chatMessages={chatMessages}
+          sendMessage={sendMessage}
+        />
+      )}
+    </div>
+  )
 }
 
 export default App
+
