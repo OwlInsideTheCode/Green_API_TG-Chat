@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import './App.css'
 import LoginForm from './LoginForm.jsx'
 
@@ -69,6 +69,36 @@ function App() {
 
     setMessages('')
   }
+
+  async function receiveMessages() {
+    const url = `https://4100.api.green-api.com/waInstance${instanceId}/receiveNotification/${apiToken}`
+    const response = await fetch(url)
+
+    if (!response.ok) {
+      console.log('Failed to receive:', response.status)
+      return
+    }
+
+    const data = await response.json()
+
+    if (!data) {
+      return
+    }
+
+    console.log('Received:', data)
+
+  }
+
+  async function deleteNotification(receiptId) { // ? docs 
+    const url = `https://4100.api.green-api.com/waInstance${instanceId}/deleteNotification/${apiToken}/${receiptId}`
+    
+    const repsonse = await fetch(url, {
+      method: 'DELETE'
+    })
+
+    if (!repsonse.ok) {
+      throw new Error(`Failed to delete notification: ${repsonse.status}`)
+    }
 
   const messageElements = chatMessages
     .filter(function (message) {
