@@ -142,7 +142,7 @@ function App() {
     }
 
       return (
-        <p key={message.id}> className={message.direction}>
+        <p key={message.id}> className={message.direction}
         <strong>{sender}: </strong>
         <span>{message.text}</span>
         </p>
