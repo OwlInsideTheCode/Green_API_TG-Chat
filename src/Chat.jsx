@@ -44,18 +44,20 @@ function Chat(props) {
     <div className="chat">
       <h1>Your chats</h1>
 
-      <input
-        type="tel"
-        placeholder="Phone number with country code"
-        value={props.phone}
-        onChange={function (event) {
-          props.setPhone(event.target.value)
-        }}
-      />
+      <div className="chat-controls">
+        <input
+          type="tel"
+          placeholder="Phone number with country code"
+          value={props.phone}
+          onChange={function (event) {
+            props.setPhone(event.target.value)
+          }}
+        />
 
-      <button type="button" onClick={props.openChat}>
-        Open Chat
-      </button>
+        <button type="button" onClick={props.openChat}>
+          Open Chat
+        </button>
+      </div>
 
       <div>{chatContent}</div>
     </div>

@@ -24,6 +24,12 @@ function LoginForm(props) {
             />  
 
             <button type = "submit">Connect</button>   
+            
+                {props.loginError && (
+                <p className="login-error" role="alert">
+                    {props.loginError}
+                </p>
+            )}
         </form>
     )
 }

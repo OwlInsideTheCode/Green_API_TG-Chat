@@ -27,7 +27,7 @@ function App() {
     direction: 'outgoing'
   }
 ])
-  const devMode = true // заменить на False для отключения режима разработчика
+  const devMode = true // заменить на false для отключения режима разработчика
 
   async function handleSubmit(event) {
   event.preventDefault()
@@ -203,6 +203,7 @@ await deleteNotification(data.receiptId)
           setInstanceId={setInstanceId}
           setApiToken={setApiToken}
           handleSubmit={handleSubmit}
+          loginError={loginError}
         />
       ) : (
         <Chat

@@ -1,16 +1,61 @@
-# React + Vite
+# Telegram Chat
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Простой чат на React для работы с Telegram через GREEN-API.
 
-Currently, two official plugins are available:
+Можно подключить инстанс, открыть чат по номеру телефона, отправлять текстовые сообщения и получать ответы.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Запуск
 
-## React Compiler
+1. Установите зависимости:я
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+   npm install
 
-## Expanding the ESLint configuration
+2. Запустите приложение:
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+   npm run dev
+
+
+3. Откройте адрес, который появится в терминале.
+
+## Подключение
+
+Для работы с API нужен авторизованный Telegram-инстанс GREEN-API.
+
+1. В `src/App.jsx` выберите значение `devMode`:
+   - `false` — для подключения к API;
+   - `true` — для просмотра интерфейса с тестовыми сообщениями. В этом случае пропустите пункты 2–3.
+2. Введите ID инстанса и API token.
+3. Нажмите **Connect**.
+4. Введите номер получателя с кодом страны, без плюса, пробелов и скобок. Для просмотра тестовых сообщений используйте `1234567890`.
+5. Нажмите **Open Chat**.
+
+В настройках инстанса должно быть включено получение уведомлений о входящих сообщениях.
+
+Сейчас в коде используется адрес `https://4100.api.green-api.com`. Если `apiUrl` вашего инстанса отличается, замените адрес в запросах в `src/App.jsx`.
+
+## Просмотр интерфейса без подключения
+
+При `devMode = true` приложение открывает интерфейс чата без ввода данных инстанса.
+
+Откройте чат с номером `1234567890`, чтобы увидеть тестовые сообщения, заданные в начальном состоянии `chatMessages`.
+
+Отправка сообщений в этом режиме не имитируется: кнопка **Send** по-прежнему вызывает API и требует действующих данных подключения.
+
+## Используемые технологии
+
+- React
+- JavaScript
+- CSS
+- Vite
+- GREEN-API
+
+## Ограничения
+
+- История хранится в состоянии React и сбрасывается при обновлении страницы.
+- Реализована обработка обычных текстовых сообщений из личных чатов.
+- Входящие сообщения сопоставляются с чатом по номеру телефона. Если API не передаёт номер отправителя, сообщение не отображается.
+- Интерфейс рассчитан на настольный браузер.
+
+## Проверка работы
+
+На момент подготовки проекта не удалось проверить отправку и получение сообщений через реальный API: запросы не давали ожидаемого ответа. Проверка полного обмена сообщениями остаётся незавершённой.
