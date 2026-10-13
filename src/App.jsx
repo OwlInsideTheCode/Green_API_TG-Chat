@@ -11,6 +11,7 @@ function App() {
   const [phone, setPhone] = useState('')
   const [activePhone, setActivePhone] = useState('')
   const [messages, setMessages] = useState('')
+  const [loginError, setLoginError] = useState('')
   // const [chatMessages, setChatMessages] = useState([])
   const [chatMessages, setChatMessages] = useState([
   {
@@ -26,19 +27,37 @@ function App() {
     direction: 'outgoing'
   }
 ])
-  const devMode = true
+  const devMode = true // заменить на False для отключения режима разработчика
 
   async function handleSubmit(event) {
-    event.preventDefault()
+  event.preventDefault()
+  setLoginError('')
 
-    const url = `https://4100.api.green-api.com/waInstance${instanceId}/getStateInstance/${apiToken}`
+  if (!instanceId.trim() || !apiToken.trim()) {
+    setLoginError('Enter your instance ID and API token.')
+    return
+  }
+
+  try {
+    const url = `https://4100.api.green-api.com/waInstance${instanceId.trim()}/getStateInstance/${apiToken.trim()}`
     const response = await fetch(url)
+
+    if (!response.ok) {
+      setLoginError(`Connection failed: HTTP ${response.status}`)
+      return
+    }
+
     const data = await response.json()
 
     if (data.stateInstance === 'authorized') {
       setIsConnected(true)
+    } else {
+      setLoginError(`Instance is not ready. Status: ${data.stateInstance}`)
     }
+  } catch {
+    setLoginError('Unable to connect. Check your internet connection and API availability.')
   }
+}
 
   function openChat() {
     if (phone.trim() === '') {

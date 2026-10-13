@@ -1,7 +1,7 @@
 
 function LoginForm(props) {
     return (
-        <form onSubmit = {props.handleSubmit}>
+        <form className="login-form" onSubmit = {props.handleSubmit}>
             <h1> Telegram Chat</h1>
 
             <input 
